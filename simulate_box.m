@@ -55,6 +55,47 @@ function simulate_box()
     vtheta0 = 1.5; % m/s
     V0 = [x0;y0;theta0;vx0;vy0;vtheta0];
     tspan = linspace(0, 6*pi, 1000);
+
+method = ["Fehlberg"];
+error_span  = [-13, 1];
+h_ref = 1e-2;
+growth_limit = 8;
+
+e_list = logspace(error_span(1),error_span(2),num_iter);
+e_list = e_list(end:-1:1);
+iter = 0;
+
+    % Loop through the three RK method
+    for j = 1:length(method)
+        % set up the Butcher tableau corresponding to the current method
+        % loop: BT, p-value, and filter bounds
+        [BT_struct,p,~] = init_BT(method(j),var_test);
+        % set up empty lists for storing data this loop
+        error = zeros(num_iter,1);
+        fun_count = zeros(num_iter,1);
+        failure_list = zeros(num_iter,1);
+        h_avg_list = zeros(num_iter,1);
+
+        % loop through different step sizes and calculate the truncation
+        % errors for each one
+        for i = 1:num_iter
+            error_desired = e_list(i);
+            [~,x_list,h_avg, evals,failure_rate] = explicit_RK_variable_step_integration ...
+                (func,t_span,X0,h_ref,BT_struct,p,error_desired,growth_limit);
+            x_true = sol(t_span(end));
+            
+            error(i) = norm(x_list(end,:).' - x_true);
+            h_avg_list(i) = h_avg;
+            fun_count(i) = evals;
+            failure_list(i) = failure_rate;
+            
+            % % print iterations for troubleshooting
+            iter = iter + 1;
+        end
+    end
+
 %run the integration
-[tlist,Vlist] = your_integrator(my_rate_func,tspan,V0,...)
+[t_list,X_list,h_avg,fun_count,failure_rate] = explicit_RK_variable_step_integration ...
+(box_rate_func,tspan,V0,h_ref,BT_struct,p,error_desired,growth_limit);
+
 end
