@@ -4,8 +4,7 @@
 %w: width of the spring drawing
 function spring_plot_struct = initialize_spring_plot(num_zigs,w)
 spring_plot_struct = struct();
-zig_ending = [.25,.75,1; ...
--1,1,0];
+zig_ending = [.25,.75,1;-1,1,0];
 zig_zag = zeros(2,3+3*num_zigs);
 zig_zag(:,1) = [-.5;0];
 zig_zag(:,end) = [num_zigs+.5;0];

@@ -1,4 +1,4 @@
-function simulate_box()
+function box_params = simulate_box()
 %box_params.m: mass of the box
 %box_params.I: moment of inertia w/respect to centroid
 %box_params.g: acceleration due to gravity
@@ -21,7 +21,7 @@ function simulate_box()
     box_params.l0 = box_params.LG * 1.5;
     box_params.k_list = 50*(ones(1,box_params.spring_number)); % N/m
     box_params.l0_list = box_params.compressed_length(ones(1,box_params.spring_number)); % m
-
+    
     %define box parameters
     box_params.LW = 10; %m
     box_params.LH = 10; %m

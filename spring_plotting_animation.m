@@ -11,7 +11,8 @@ function spring_plotting_example()
     % initialize the current figure and save as object
     clf
     fig1 = figure(1);
-
+    
+    box_params = simulate_box();
     num_zigs = 5;
     w = .1;
     hold on;
@@ -26,22 +27,21 @@ function spring_plotting_example()
     % forces the video to be high-quality
     set(fig1,'units','pixels','position',[0 0 1440 1080])
 
-    for theta=linspace(0,6*pi,1000)
-        P1 = [.5;.5];
-        P2 = 2*[cos(theta);sin(theta)];
+    %for theta=linspace(0,6*pi,1000)
+    theta = 0
+        P1 = box_params.P_box;
+        P2 = box_params.P_world;
         update_spring_plot(spring_plot_struct,P1,P2)
         drawnow;
-    end
+    %end
 
     %capture a frame (what is currently plotted)
             current_frame = getframe(fig1);
             %write the frame to the video
             writeVideo(writerObj,current_frame);
-            if t == frames
                 %must call close after all frames are written to save the video
                 close(writerObj);
-                length(xfoot)
-            end
+           
 end
 
 
