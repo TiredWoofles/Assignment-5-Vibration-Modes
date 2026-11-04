@@ -21,5 +21,39 @@
 %ay: y acceleration of the box
 %atheta: angular acceleration of the box
 function [ax,ay,atheta] = compute_accel(x,y,theta,box_params)
-%your code here
+
+%Turn mounting points from box frame to world frame rigid body
+%transformation eq
+Plist_world = compute_rbt(x,y,theta,box_params.P_box);
+
+%Initalize total force (linear momentum eq) & torque (angular momentum)
+F_total = [0;-box_params.m*box_params.g];
+tau_total = 0;
+
+% # Springs
+n = length(box_params.k_list);
+
+% per spring 
+for i = 1:n
+    % Fixed spring mounting pts
+    PA = box_params.P_world(:,i);
+    % Moving Spring mounting pts
+    PB = Plist_world(:,i);
+    % Spring Force from assignment eq ki (stiffness) - length over unit
+    % vector A to B
+    Fi = compute_spring_force(box_params.k_list(i),box_params.l0_list(i),PA,PB);
+    % Total forces
+    F_total = F_total + Fi;
+    % Position from COM (Pc) to mounting pt/lenght
+    r = PB - [x;y];
+    % Find total Torque
+    tau_total = tau_total + r(1)*Fi(2) - r(2)*Fi(1);
+end
+
+% acclerations (horizontal & vertical) F=MA or y or x = F/M
+% torque = Inertia * angular acceleration
+ax = F_total(1)/box_params.m;
+ay = F_total(2)/box_params.m;
+atheta = tau_total/box_params.I;
+
 end
