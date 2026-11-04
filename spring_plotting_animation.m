@@ -26,6 +26,7 @@ function spring_plotting_example()
     for i = 1:spring_n
     spring_structs(i) = initialize_spring_plot(num_zigs,w);
     end
+    box_plot = plot(boundary_pts(1,:),boundary_pts(2,:),'k','linewidth',2);
 
     axis equal; axis square;
     axis([-3,3,-3,3]);
@@ -39,11 +40,15 @@ function spring_plotting_example()
 
     %for theta=linspace(0,6*pi,1000)
     theta = 0
+        box_params = simulate_box();
+        boundary_pts = box_params.boundary_pts;
+        set(box_plot,'xdata',boundary_pts(1,:),'ydata',boundary_pts(2,:));
         for i = 1:spring_n
             P1 = P_box(i);
             P2 = P_world(i);
             update_spring_plot(spring_structs(i),P1,P2)
         end
+
         drawnow;
     %end
 
