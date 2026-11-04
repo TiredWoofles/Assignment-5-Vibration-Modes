@@ -13,10 +13,20 @@ function spring_plotting_example()
     fig1 = figure(1);
     
     box_params = simulate_box();
+    P_box = box_params.P_box;
+    P_world = box_params.P_world;
+    %number of springs
+    spring_n = length(box_params.P_world);
     num_zigs = 5;
     w = .1;
     hold on;
-    spring_plot_struct = initialize_spring_plot(num_zigs,w);
+
+    %initialize array of spring structs
+    spring_structs = zeros(springs,n)
+    for i = 1:spring_n
+    spring_structs(i) = initialize_spring_plot(num_zigs,w);
+    end
+
     axis equal; axis square;
     axis([-3,3,-3,3]);
     xlabel("$X$ Position (-)", Interpreter="latex");
@@ -29,9 +39,11 @@ function spring_plotting_example()
 
     %for theta=linspace(0,6*pi,1000)
     theta = 0
-        P1 = box_params.P_box;
-        P2 = box_params.P_world;
-        update_spring_plot(spring_plot_struct,P1,P2)
+        for i = 1:spring_n
+            P1 = P_box(i);
+            P2 = P_world(i);
+            update_spring_plot(spring_structs(i),P1,P2)
+        end
         drawnow;
     %end
 
