@@ -1,5 +1,5 @@
 function spring_plotting_example()
-    mypath1 = 'C:\Users\sli2\OneDrive - Olin College of Engineering\MechE Math\Assignment-5-Vibration-Modes';
+    mypath1 = 'C:\Users\kyue\OneDrive - Olin College of Engineering\Documents\MATLAB\Numerical Methods\Assignment-5-Vibration-Modes';
     %'C:\Users\sli2\OneDrive - Olin College of Engineering\MechE Math\Assignment-5-Vibration-Modes';
     %'C:\Users\kyue\OneDrive - Olin College of Engineering\Documents\MATLAB\Numerical Methods\Assignment-5-Vibration-Modes':
     fname='vibration_animation.avi';
@@ -14,7 +14,7 @@ function spring_plotting_example()
     clf
     fig1 = figure(1);
     
-    box_params = simulate_box();
+    [tlist,Vlist,box_params] = simulate_box();
     P_box = box_params.P_box;
     P_world = box_params.P_world;
     %number of springs
@@ -41,16 +41,23 @@ function spring_plotting_example()
     set(fig1,'units','pixels','position',[0 0 1440 1080])
 
     %for theta=linspace(0,6*pi,1000)
-    theta = 0
-        box_params = simulate_box();
-        boundary_pts = box_params.boundary_pts;
+    t = linspace(tlist(1),tlist(2),500);
+    V = interp1(tlist,Vlist,t_uniform);
+
+    for j = 1:length(t)
+        x = V(j,1); y = V(j, 2);, theta = V(j,3);
+
+        boundary_pts = compute_rbt(x,y,theta,box_params.boundary_pts);
         set(box_plot,'xdata',boundary_pts(1,:),'ydata',boundary_pts(2,:));
         for i = 1:spring_n
-            P1 = P_box(i);
-            P2 = P_world(i);
+            P1 = box_params.P_world(i);
+
+            P2 = compute_rbt(x,y,theta,box_params.P_box(:,i));
             update_spring_plot(spring_structs(i),P1,P2)
         end
-
+        axis equal;
+        axis square
+        axis([-15 15 -15 15])
         drawnow;
     %end
 
@@ -60,6 +67,7 @@ function spring_plotting_example()
             writeVideo(writerObj,current_frame);
                 %must call close after all frames are written to save the video
                 close(writerObj);
+    end
            
 end
 
