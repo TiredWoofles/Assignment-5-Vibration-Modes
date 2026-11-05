@@ -19,7 +19,7 @@ function [tlist,Vlist,box_params] = simulate_box()
     box_params.LG = 1.5; %m this is the length of spring compressed by gravity
     box_params.l0 = box_params.LG * 1.5;
     box_params.k_list = [10,10,40,60]; % N/m
-    box_params.l0_list = box_params.LG(ones(1,box_params.spring_number)); % m
+    box_params.l0_list = box_params.l0(ones(1,box_params.spring_number)); % m
 
     %define box parameters
     box_params.LW = 10; %m
@@ -57,9 +57,9 @@ function [tlist,Vlist,box_params] = simulate_box()
     V0 = [x0;y0;theta0;vx0;vy0;vtheta0];
     tspan = [0 6*pi];
 
-[t_list,V_list] = ode45(my_rate_func,tspan,V0);
+[tlist,Vlist] = ode45(my_rate_func,tspan,V0);
 
-box_params.t = t_in;
-box_params.V = V_in;
+box_params.t = tlist;
+box_params.V = Vlist;
 
 end
