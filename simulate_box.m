@@ -59,4 +59,7 @@ function [tlist,Vlist,box_params] = simulate_box()
 
 [t_list,V_list] = ode45(my_rate_func,tspan,V0);
 
+box_params.t = t_in;
+box_params.V = V_in;
+
 end
