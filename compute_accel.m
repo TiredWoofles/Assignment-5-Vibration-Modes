@@ -31,7 +31,7 @@ F_total = [0;-box_params.m*box_params.g];
 tau_total = 0;
 
 % # Springs
-n = length(box_params.k_list);
+n = size(box_params.P_box,2);
 
 % per spring 
 for i = 1:n
