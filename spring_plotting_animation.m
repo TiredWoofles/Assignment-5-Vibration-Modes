@@ -43,6 +43,15 @@ end
 
         boundary_pts = compute_rbt(x,y,theta,box_params.boundary_pts);
         box_plot = plot(boundary_pts(1,:),boundary_pts(2,:),'k');
+
+        ax = gca;
+
+axis(ax,'square');
+axis(ax,'equal');
+axis(ax,[-20 20 -20 20]);
+
+set(ax,'Position',[0.15 0.15 0.7 0.7]);
+hold(ax, 'on')
     for j = 1:length(t)
         x = V(j,1); y = V(j, 2);, theta = V(j,3);
 
@@ -54,15 +63,16 @@ end
             P2 = compute_rbt(x,y,theta,box_params.P_box(:,i));
             update_spring_plot(spring_structs(i),P1,P2);
         end
-        
-        axis([-15 15 -15 15])
-        axis equal;
-        axis square;
+
+
         drawnow;
     %end
 
     %capture a frame (what is currently plotted)
             current_frame = getframe(fig1);
+
+                set(fig1,'units','pixels','position',[100 100 1440 1080])
+
             %write the frame to the video
             writeVideo(writerObj,current_frame);
                 
