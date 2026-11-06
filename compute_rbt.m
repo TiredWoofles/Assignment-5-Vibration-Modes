@@ -13,8 +13,5 @@ function Plist_world = compute_rbt(x,y,theta,Plist_box)
 % your code here
 R = [cos(theta) -sin(theta);sin(theta) cos(theta)];
 Plist_world = R*Plist_box+[x; y];
-<<<<<<< Updated upstream
 end
-=======
-end
->>>>>>> Stashed changes
+

@@ -18,7 +18,7 @@ function spring_plotting_example()
     P_box = box_params.P_box;
     P_world = box_params.P_world;
     %number of springs
-    spring_n = length(box_params.spring_number);
+    spring_n = box_params.spring_number;
     num_zigs = 5;
     w = .1;
     hold on;
@@ -27,7 +27,6 @@ function spring_plotting_example()
 for i = 2:spring_n
     spring_structs(end+1) = initialize_spring_plot(num_zigs,w);
 end
-spring_structs(2)
 
     axis equal; axis square;
     axis([-3,3,-3,3]);
@@ -37,7 +36,7 @@ spring_structs(2)
     set(gca,'TickLabelInterpreter','latex')
     fontsize(scale=2)
     % forces the video to be high-quality
-    set(fig1,'units','pixels','position',[0 0 1440 1080])
+    %set(fig1,'units','pixels','position',[0 0 1440 1080])
 
     %for theta=linspace(0,6*pi,1000)
     t = linspace(tlist(1),tlist(end),500);
