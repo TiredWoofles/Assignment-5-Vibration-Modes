@@ -13,4 +13,5 @@ l = norm(PB-PA);
 e_s = (PB-PA)/l;
 %Force exerted by spring at point B
 F = -k*(l-l0)*e_s;
+
 end

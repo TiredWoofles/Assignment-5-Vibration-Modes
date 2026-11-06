@@ -55,11 +55,9 @@ function [tlist,Vlist,box_params] = simulate_box()
     vy0 = 1.5; % m/s
     vtheta0 = 1.5; % m/s
     V0 = [x0;y0;theta0;vx0;vy0;vtheta0];
-    tspan = [0 6*pi];
+    tspan = [0 6];
 
 [tlist,Vlist] = ode45(my_rate_func,tspan,V0);
 
-box_params.t = tlist;
-box_params.V = Vlist;
 
 end
