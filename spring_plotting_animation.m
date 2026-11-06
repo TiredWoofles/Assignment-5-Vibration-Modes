@@ -28,8 +28,6 @@ for i = 2:spring_n
     spring_structs(end+1) = initialize_spring_plot(num_zigs,w);
 end
 
-    axis equal; axis square;
-    axis([-3,3,-3,3]);
     xlabel("$X$ Position (-)", Interpreter="latex");
     ylabel("$Y$ Position (-)", Interpreter="latex");
     title("Vibration Simulation", Interpreter="latex")
@@ -56,9 +54,10 @@ end
             P2 = compute_rbt(x,y,theta,box_params.P_box(:,i));
             update_spring_plot(spring_structs(i),P1,P2);
         end
-        axis equal;
-        axis square
+        
         axis([-15 15 -15 15])
+        axis equal;
+        axis square;
         drawnow;
     %end
 
