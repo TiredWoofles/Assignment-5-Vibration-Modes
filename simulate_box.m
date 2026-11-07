@@ -1,4 +1,4 @@
-function [tlist,Vlist,box_params] = simulate_box()
+function [tlist,Vlist,box_params,my_rate_func] = simulate_box()
 %box_params.m: mass of the box
 %box_params.I: moment of inertia w/respect to centroid
 %box_params.g: acceleration due to gravity

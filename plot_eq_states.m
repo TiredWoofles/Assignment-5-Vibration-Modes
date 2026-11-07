@@ -1,0 +1,91 @@
+% linear vs nonlinear function rate plot
+
+%INPUTS:
+%N/A
+%OUTPUTS:
+%Plots a linear vs nonlinear simulation. Taken from simulate_box
+function plot_eq_states
+[~,~,~,my_rate_func] = simulate_box();
+equilibrium_func = @(V) my_rate_func(0,V);
+
+% changeable parameters
+V_guess = [0;0;0;0;0;0];
+% Movement of box from equilibrium positions
+dx0 = 0;      %initial horizontal displacement
+dy0 = 0;      %initial vertical displacement
+dtheta0 = 0; %initial angular displacement
+% how fast the box is moving
+vx0 = 1.5;    %initial horizontal velocity
+vy0 = 1.5;    %initial vertical velocity
+vtheta0 = 5;  %initial angular velocity
+%small number used to scale initial perturbation
+epsilon = 2; % 0.01 for small perturbation nearly over lap. Large begins to seperate ex: 2
+tspan = [0 6];
+solver_params = struct();
+solver_params.dxmin = 1e-14;
+solver_params.ftol = 1e-12;
+solver_params.max_iter = 200;
+solver_params.dxmax = 1e8;
+solver_params.numerical_diff = 1;
+
+[V_eq,exit_flag] = multi_newton_solver(equilibrium_func,V_guess,solver_params);
+
+if exit_flag ~= 1
+    error('Equilibrium solver did not converge.');
+end
+
+% Verify equilibrium
+% disp('Equilibrium state:')
+% disp(V_eq)
+% disp('Rate function at equilibrium:')
+% disp(equilibrium_func(V_eq))
+
+J_approx = approximate_jacobian(equilibrium_func, V_eq);
+my_linear_rate = @(t_in,V_in) J_approx*(V_in-V_eq);
+
+% Initial state
+V0 = V_eq + epsilon*[dx0;dy0;dtheta0;vx0;vy0;vtheta0];
+% Nonlinear simulation
+[tlist_nonlinear,Vlist_nonlinear] = ...
+    ode45(my_rate_func,tspan,V0);
+% Linear simulation
+[tlist_linear,Vlist_linear] = ...
+    ode45(my_linear_rate,tspan,V0);
+tiledlayout(3,1,'TileSpacing','compact','Padding','compact');
+
+% X horizontal
+ax(1) = nexttile;
+hNL = plot(tlist_nonlinear,Vlist_nonlinear(:,1),'b-','LineWidth',1.5);
+hold on;
+hL = plot(tlist_linear,Vlist_linear(:,1),'r--','LineWidth',1.5);
+ylabel('$x$ (m)','Interpreter','latex','FontSize',14);
+grid on;
+
+% Y vertical
+ax(2) = nexttile;
+plot(tlist_nonlinear,Vlist_nonlinear(:,2),'b-','LineWidth',1.5);
+hold on;
+plot(tlist_linear,Vlist_linear(:,2),'r--','LineWidth',1.5);
+ylabel('$y$ (m)','Interpreter','latex','FontSize',14);
+grid on;
+
+% theta angular
+ax(3) = nexttile;
+plot(tlist_nonlinear,Vlist_nonlinear(:,3),'b-','LineWidth',1.5);
+hold on;
+plot(tlist_linear,Vlist_linear(:,3),'r--','LineWidth',1.5);
+ylabel('$\theta$ (rad)','Interpreter','latex','FontSize',14);
+xlabel('Time (s)','Interpreter','latex','FontSize',14);
+grid on;
+
+% title for small perturbation
+% sgtitle('Small Initial Perturbation: Linear vs Nonlinear','Interpreter','latex','FontSize',17);
+% title for large perturbation
+sgtitle('Large Initial Perturbation: Linear vs Nonlinear','Interpreter','latex','FontSize',17);
+% Shared legend
+lgd = legend(ax(1),[hNL hL], ...
+    {'Nonlinear ODE','Linearized ODE'}, ...
+    'Interpreter','latex','FontSize',12, ...
+    'Orientation','horizontal');
+lgd.Layout.Tile = 'north';
+end

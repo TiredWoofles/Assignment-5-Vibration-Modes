@@ -1,5 +1,5 @@
 function spring_plotting_example()
-    mypath1 = 'C:\Users\kyue\OneDrive - Olin College of Engineering\Documents\MATLAB\Numerical Methods\Assignment-5-Vibration-Modes';
+    mypath1 = 'C:\Users\sli2\OneDrive - Olin College of Engineering\MechE Math\Assignment-5-Vibration-Modes';
     %'C:\Users\sli2\OneDrive - Olin College of Engineering\MechE Math\Assignment-5-Vibration-Modes';
     %'C:\Users\kyue\OneDrive - Olin College of Engineering\Documents\MATLAB\Numerical Methods\Assignment-5-Vibration-Modes':
     fname='vibration_animation.avi';
@@ -13,6 +13,7 @@ function spring_plotting_example()
     % initialize the current figure and save as object
     clf
     fig1 = figure(1);
+    set(fig1,'Position',[100 100 1440 1080]);
     
     [tlist,Vlist,box_params] = simulate_box();
     P_box = box_params.P_box;
@@ -34,7 +35,7 @@ end
     set(gca,'TickLabelInterpreter','latex')
     fontsize(scale=2)
     % forces the video to be high-quality
-    %set(fig1,'units','pixels','position',[0 0 1440 1080])
+    % set(fig1,'units','pixels','position',[0 0 1440 1080])
 
     %for theta=linspace(0,6*pi,1000)
     t = linspace(tlist(1),tlist(end),500);
@@ -71,7 +72,7 @@ hold(ax, 'on')
     %capture a frame (what is currently plotted)
             current_frame = getframe(fig1);
 
-                set(fig1,'units','pixels','position',[100 100 1440 1080])
+                % set(fig1,'units','pixels','position',[0 0 1440 1080])
 
             %write the frame to the video
             writeVideo(writerObj,current_frame);
