@@ -19,7 +19,7 @@ vx0 = 1.5;    %initial horizontal velocity
 vy0 = 1.5;    %initial vertical velocity
 vtheta0 = 5;  %initial angular velocity
 %small number used to scale initial perturbation
-epsilon = 2; % 0.01 for small perturbation nearly over lap. Large begins to seperate ex: 2
+epsilon = 2; % 0.01 for small perturbation nearly over lap. Large begins to separate ex: 2
 tspan = [0 6];
 solver_params = struct();
 solver_params.dxmin = 1e-14;
@@ -35,10 +35,10 @@ if exit_flag ~= 1
 end
 
 % Verify equilibrium
-% disp('Equilibrium state:')
-% disp(V_eq)
-% disp('Rate function at equilibrium:')
-% disp(equilibrium_func(V_eq))
+disp('Equilibrium state:')
+disp(V_eq)
+disp('Rate function at equilibrium:')
+disp(equilibrium_func(V_eq))
 
 J_approx = approximate_jacobian(equilibrium_func, V_eq);
 my_linear_rate = @(t_in,V_in) J_approx*(V_in-V_eq);
@@ -78,14 +78,20 @@ ylabel('$\theta$ (rad)','Interpreter','latex','FontSize',14);
 xlabel('Time (s)','Interpreter','latex','FontSize',14);
 grid on;
 
-% title for small perturbation
-% sgtitle('Small Initial Perturbation: Linear vs Nonlinear','Interpreter','latex','FontSize',17);
-% title for large perturbation
-sgtitle('Large Initial Perturbation: Linear vs Nonlinear','Interpreter','latex','FontSize',17);
-% Shared legend
+% Title based on perturbation size
+if epsilon <= 0.1
+    plot_title = 'Small Initial Perturbation: Linear vs Nonlinear';
+else
+    plot_title = 'Large Initial Perturbation: Linear vs Nonlinear';
+end
+sgtitle(plot_title,'Interpreter','latex','FontSize',17);
+
 lgd = legend(ax(1),[hNL hL], ...
     {'Nonlinear ODE','Linearized ODE'}, ...
     'Interpreter','latex','FontSize',12, ...
     'Orientation','horizontal');
 lgd.Layout.Tile = 'north';
+set(ax,'TickLabelInterpreter','latex');
+set(ax,'FontSize',12);
+
 end
