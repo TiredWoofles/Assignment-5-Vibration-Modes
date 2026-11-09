@@ -4,7 +4,14 @@
 %N/A
 %OUTPUTS:
 %Plots a linear vs nonlinear simulation. Taken from simulate_box
-function plot_eq_states
+function [J_approx,V_eq] = plot_eq_states(epsilon)
+
+arguments
+%small number used to scale initial perturbation
+    epsilon (1,:) double = 0.01; 
+    % 0.01 for small perturbation nearly over lap. Large begins to separate ex: 2
+end
+
 [~,~,~,my_rate_func] = simulate_box();
 equilibrium_func = @(V) my_rate_func(0,V);
 
@@ -18,8 +25,6 @@ dtheta0 = 0; %initial angular displacement
 vx0 = 1.5;    %initial horizontal velocity
 vy0 = 1.5;    %initial vertical velocity
 vtheta0 = 5;  %initial angular velocity
-%small number used to scale initial perturbation
-epsilon = 2; % 0.01 for small perturbation nearly over lap. Large begins to separate ex: 2
 tspan = [0 6];
 solver_params = struct();
 solver_params.dxmin = 1e-14;
@@ -45,6 +50,7 @@ my_linear_rate = @(t_in,V_in) J_approx*(V_in-V_eq);
 
 % Initial state
 V0 = V_eq + epsilon*[dx0;dy0;dtheta0;vx0;vy0;vtheta0];
+V_eq
 % Nonlinear simulation
 [tlist_nonlinear,Vlist_nonlinear] = ...
     ode45(my_rate_func,tspan,V0);
