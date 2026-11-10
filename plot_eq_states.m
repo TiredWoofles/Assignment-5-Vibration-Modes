@@ -4,11 +4,12 @@
 %N/A
 %OUTPUTS:
 %Plots a linear vs nonlinear simulation. Taken from simulate_box
-function [J_approx,V_eq] = plot_eq_states(epsilon)
+function [J_approx,V_eq] = plot_eq_states(epsilon, plot)
 
 arguments
 %small number used to scale initial perturbation
     epsilon (1,:) double = 0.01; 
+    plot (1,:) double = 0; %0 means plot, 1 means no plot
     % 0.01 for small perturbation nearly over lap. Large begins to separate ex: 2
 end
 
@@ -57,6 +58,8 @@ V_eq
 % Linear simulation
 [tlist_linear,Vlist_linear] = ...
     ode45(my_linear_rate,tspan,V0);
+
+if(plot == 1)
 tiledlayout(3,1,'TileSpacing','compact','Padding','compact');
 
 % X horizontal
@@ -99,5 +102,6 @@ lgd = legend(ax(1),[hNL hL], ...
 lgd.Layout.Tile = 'north';
 set(ax,'TickLabelInterpreter','latex');
 set(ax,'FontSize',12);
+end
 
 end

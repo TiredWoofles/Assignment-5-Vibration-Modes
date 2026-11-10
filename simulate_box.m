@@ -1,4 +1,4 @@
-function [tlist,Vlist,box_params,my_rate_func] = simulate_box()
+function [tlist,Vlist,box_params,my_rate_func] = simulate_box(V0)
 %box_params.m: mass of the box
 %box_params.I: moment of inertia w/respect to centroid
 %box_params.g: acceleration due to gravity
@@ -8,7 +8,10 @@ function [tlist,Vlist,box_params,my_rate_func] = simulate_box()
 % points for the spring (in the world frame)
 %box_params.P_box: 2 x n list of mounting points
 % for the spring (in the box frame)
-
+arguments
+    V0 (:,1) double = [0;0;0;1.5;1.5;1.5]; %[x0;y0;theta0;vx0;vy0;vtheta0];
+   
+end
     %define system parameters
     box_params = struct();
     box_params.m = 5; % kg
@@ -48,13 +51,7 @@ function [tlist,Vlist,box_params,my_rate_func] = simulate_box()
 %load the system parameters into the rate function
 %via an anonymous function
     my_rate_func = @(t_in,V_in) box_rate_func(t_in,V_in,box_params);
-    x0 = 0;
-    y0 = 0;
-    theta0 = 0;
-    vx0 = 1.5; % m/s
-    vy0 = 1.5; % m/s
-    vtheta0 = 1.5; % m/s
-    V0 = [x0;y0;theta0;vx0;vy0;vtheta0];
+
     tspan = [0 6];
 
 [tlist,Vlist] = ode45(my_rate_func,tspan,V0);

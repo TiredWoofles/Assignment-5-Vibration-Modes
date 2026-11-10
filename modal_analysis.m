@@ -11,7 +11,7 @@ omega_n = diag(sqrt(eigvals));
 for i = 1:3
     mode = U_mode(:,i);
     V0 = V_eq + epsilon.*[mode;0;0;0];
-    [tlist,Vlist,~,~] = simulate_box()
+    [tlist,Vlist,~,~] = simulate_box(V0)
 
 end
 

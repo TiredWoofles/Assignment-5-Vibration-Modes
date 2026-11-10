@@ -1,0 +1,87 @@
+function modal_simulation()
+    clf
+    mypath1 ='C:\Users\kyue\OneDrive - Olin College of Engineering\Documents\MATLAB\Numerical Methods\Assignment-5-Vibration-Modes';
+    %'C:\Users\sli2\OneDrive - Olin College of Engineering\MechE Math\Assignment-5-Vibration-Modes';
+    %'C:\Users\kyue\OneDrive - Olin College of Engineering\Documents\MATLAB\Numerical Methods\Assignment-5-Vibration-Modes':
+    fname='modal_vibration_animation.avi';
+    input_fname = [mypath1,fname];
+        
+    %create a videowriter, which will write frames to the animation file
+    writerObj = VideoWriter(input_fname);
+        
+    %must call open before writing any frames
+    open(writerObj);
+    % initialize the current figure and save as object
+    clf
+    fig1 = figure(1);
+    set(fig1,'Position',[100 100 1440 1080]);
+    
+    [tlist,Vlist,box_params] = modal_analysis_for_plot();
+    P_box = box_params.P_box;
+    P_world = box_params.P_world;
+    %number of springs
+    spring_n = box_params.spring_number;
+    num_zigs = 5;
+    w = .1;
+    hold on;
+    spring_structs(1) = initialize_spring_plot(num_zigs,w);
+
+for i = 2:spring_n
+    spring_structs(end+1) = initialize_spring_plot(num_zigs,w);
+end
+
+    xlabel("$X$ Position (-)", Interpreter="latex");
+    ylabel("$Y$ Position (-)", Interpreter="latex");
+    title("Vibration Simulation", Interpreter="latex")
+    set(gca,'TickLabelInterpreter','latex')
+    fontsize(scale=2)
+    % forces the video to be high-quality
+    % set(fig1,'units','pixels','position',[0 0 1440 1080])
+
+    %for theta=linspace(0,6*pi,1000)
+    t = linspace(tlist(1),tlist(end),500);
+    V = interp1(tlist,Vlist,t);
+    x = V(1,1); y = V(1, 2); theta = V(1,3);
+
+        boundary_pts = compute_rbt(x,y,theta,box_params.boundary_pts);
+        box_plot = plot(boundary_pts(1,:),boundary_pts(2,:),'k');
+
+        ax = gca;
+
+axis(ax,'square');
+axis(ax,'equal');
+axis(ax,[-20 20 -20 20]);
+
+set(ax,'Position',[0.15 0.15 0.7 0.7]);
+hold(ax, 'on')
+    for j = 1:length(t)
+        x = V(j,1); y = V(j, 2);, theta = V(j,3);
+
+        boundary_pts = compute_rbt(x,y,theta,box_params.boundary_pts);
+        set(box_plot,'xdata',boundary_pts(1,:),'ydata',boundary_pts(2,:));
+        for i = 1:spring_n
+            P1 = box_params.P_world(:,i);
+
+            P2 = compute_rbt(x,y,theta,box_params.P_box(:,i));
+            update_spring_plot(spring_structs(i),P1,P2);
+        end
+
+
+        drawnow;
+    %end
+
+    %capture a frame (what is currently plotted)
+            current_frame = getframe(fig1);
+
+                % set(fig1,'units','pixels','position',[0 0 1440 1080])
+
+            %write the frame to the video
+            writeVideo(writerObj,current_frame);
+                
+    end
+    %must call close after all frames are written to save the video
+                close(writerObj);
+           
+end
+
+
