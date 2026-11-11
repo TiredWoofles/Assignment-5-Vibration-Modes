@@ -1,6 +1,6 @@
 function modal_simulation()
     clf
-    mypath1 ='C:\Users\kyue\OneDrive - Olin College of Engineering\Documents\MATLAB\Numerical Methods\Assignment-5-Vibration-Modes';
+    mypath1 ='C:\Users\sli2\OneDrive - Olin College of Engineering\MechE Math\Assignment-5-Vibration-Modes';
     %'C:\Users\sli2\OneDrive - Olin College of Engineering\MechE Math\Assignment-5-Vibration-Modes';
     %'C:\Users\kyue\OneDrive - Olin College of Engineering\Documents\MATLAB\Numerical Methods\Assignment-5-Vibration-Modes':
     fname='modal_vibration_animation.avi';
@@ -51,6 +51,11 @@ end
 axis(ax,'square');
 axis(ax,'equal');
 axis(ax,[-20 20 -20 20]);
+
+% Make x and y tick marks identical
+ticks = -20:5:20;
+xticks(ax,ticks);
+yticks(ax,ticks);
 
 set(ax,'Position',[0.15 0.15 0.7 0.7]);
 hold(ax, 'on')

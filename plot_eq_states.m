@@ -4,12 +4,12 @@
 %N/A
 %OUTPUTS:
 %Plots a linear vs nonlinear simulation. Taken from simulate_box
-function [J_approx,V_eq] = plot_eq_states(epsilon, plot)
+function [J_approx,V_eq] = plot_eq_states(epsilon, plot_flag)
 
 arguments
 %small number used to scale initial perturbation
     epsilon (1,:) double = 0.01; 
-    plot (1,:) double = 0; %0 means plot, 1 means no plot
+    plot_flag (1,:) double = 0; %0 means no plot, 1 means plot
     % 0.01 for small perturbation nearly over lap. Large begins to separate ex: 2
 end
 
@@ -59,49 +59,50 @@ V_eq
 [tlist_linear,Vlist_linear] = ...
     ode45(my_linear_rate,tspan,V0);
 
-if(plot == 1)
-tiledlayout(3,1,'TileSpacing','compact','Padding','compact');
+if(plot_flag == 1)
+    figure;
+    tiledlayout(3,1,'TileSpacing','compact','Padding','compact');
 
-% X horizontal
-ax(1) = nexttile;
-hNL = plot(tlist_nonlinear,Vlist_nonlinear(:,1),'b-','LineWidth',1.5);
-hold on;
-hL = plot(tlist_linear,Vlist_linear(:,1),'r--','LineWidth',1.5);
-ylabel('$x$ (m)','Interpreter','latex','FontSize',14);
-grid on;
+    % X horizontal
+    ax(1) = nexttile;
+    hNL = plot(tlist_nonlinear,Vlist_nonlinear(:,1),'b-','LineWidth',1.5);
+    hold on;
+    hL = plot(tlist_linear,Vlist_linear(:,1),'r--','LineWidth',1.5);
+    ylabel('$x$ (m)','Interpreter','latex','FontSize',14);
+    grid on;
 
-% Y vertical
-ax(2) = nexttile;
-plot(tlist_nonlinear,Vlist_nonlinear(:,2),'b-','LineWidth',1.5);
-hold on;
-plot(tlist_linear,Vlist_linear(:,2),'r--','LineWidth',1.5);
-ylabel('$y$ (m)','Interpreter','latex','FontSize',14);
-grid on;
+    % Y vertical
+    ax(2) = nexttile;
+    plot(tlist_nonlinear,Vlist_nonlinear(:,2),'b-','LineWidth',1.5);
+    hold on;
+    plot(tlist_linear,Vlist_linear(:,2),'r--','LineWidth',1.5);
+    ylabel('$y$ (m)','Interpreter','latex','FontSize',14);
+    grid on;
 
-% theta angular
-ax(3) = nexttile;
-plot(tlist_nonlinear,Vlist_nonlinear(:,3),'b-','LineWidth',1.5);
-hold on;
-plot(tlist_linear,Vlist_linear(:,3),'r--','LineWidth',1.5);
-ylabel('$\theta$ (rad)','Interpreter','latex','FontSize',14);
-xlabel('Time (s)','Interpreter','latex','FontSize',14);
-grid on;
+    % theta angular
+    ax(3) = nexttile;
+    plot(tlist_nonlinear,Vlist_nonlinear(:,3),'b-','LineWidth',1.5);
+    hold on;
+    plot(tlist_linear,Vlist_linear(:,3),'r--','LineWidth',1.5);
+    ylabel('$\theta$ (rad)','Interpreter','latex','FontSize',14);
+    xlabel('Time (s)','Interpreter','latex','FontSize',14);
+    grid on;
 
-% Title based on perturbation size
-if epsilon <= 0.1
-    plot_title = 'Small Initial Perturbation: Linear vs Nonlinear';
-else
-    plot_title = 'Large Initial Perturbation: Linear vs Nonlinear';
-end
-sgtitle(plot_title,'Interpreter','latex','FontSize',17);
+    % Title based on perturbation size
+    if epsilon <= 0.1
+        plot_title = 'Small Initial Perturbation: Linear vs Nonlinear';
+    else
+        plot_title = 'Large Initial Perturbation: Linear vs Nonlinear';
+    end
+    sgtitle(plot_title,'Interpreter','latex','FontSize',17);
 
-lgd = legend(ax(1),[hNL hL], ...
-    {'Nonlinear ODE','Linearized ODE'}, ...
-    'Interpreter','latex','FontSize',12, ...
-    'Orientation','horizontal');
-lgd.Layout.Tile = 'north';
-set(ax,'TickLabelInterpreter','latex');
-set(ax,'FontSize',12);
+    lgd = legend(ax(1),[hNL hL], ...
+        {'Nonlinear ODE','Linearized ODE'}, ...
+        'Interpreter','latex','FontSize',12, ...
+        'Orientation','horizontal');
+    lgd.Layout.Tile = 'north';
+    set(ax,'TickLabelInterpreter','latex');
+    set(ax,'FontSize',12);
 end
 
 end
